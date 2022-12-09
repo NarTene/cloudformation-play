@@ -1,0 +1,31 @@
+---
+Parameters:
+  NetworkStackName:
+    Type: String
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances. Linked to AWS Parameter
+    Type: AWS::EC2::KeyPair::KeyName # Resource identifier
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+Resources:
+  WebServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-0ab4d1e9cf9a1215a #ami-0ab4d1e9cf9a1215a
+      SubnetId:
+        - !ImportValue PublicSubnet
+      SecurityGroupIds:
+        - !ImportValue WebServerSecurityGroup
+      Tags:
+        - Key: Name
+          Value: myInstanceCrossStackTest
+      #NetworkInterfaces:
+      #- GroupSet:
+        #- Fn::ImportValue:
+            #Fn::Sub: "${NetworkStackName}-NoIngressSecurityGroup"
+        #AssociatePublicIpAddress: 'true'
+        #DeviceIndex: '0'
+        #DeleteOnTermination: 'true'
+        #SubnetId:
+          #Fn::ImportValue:
+            #Fn::Sub: "${NetworkStackName}-SubnetID"
