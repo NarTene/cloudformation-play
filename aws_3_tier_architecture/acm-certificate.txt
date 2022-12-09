@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: requesting a certificate from cloudformation
+Parameters:
+  HostedZoneId:
+    Type: String
+    Default: Z073729280CGQXEZNL4H
+  DomainName:
+    Type: String
+    Default: cloudlab2022.net
+Resources: 
+  MyCertificate: 
+    Type:
+      AWS::CertificateManager::Certificate
+    Properties: 
+      DomainName: !Ref DomainName
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          HostedZoneId: !Ref HostedZoneId
+Outputs:
+  MyCertificate:    
+    Description: MyCertificate ARN or ID
+    Value:
+      !Ref MyCertificate
+    Export:
+      Name: !Sub "${AWS::StackName}-MyCertificateID"
+
